@@ -1,31 +1,31 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import DatePicker from 'react-datepicker';
+import React, { useState, useEffect } from "react";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
-export default class EditFood extends Component {
-  constructor(props) {
-    super(props);
 
-    this.onChangeUsername = this.onChangeUsername.bind(this);
-    this.onChangeDescription = this.onChangeDescription.bind(this);
-    this.onChangecalories = this.onChangecalories.bind(this);
-    this.onChangeDate = this.onChangeDate.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+const EditFood = () => {
+  const { id } = useParams();
+  const [Food, setFood] = useState({
+    username: "",
+    description: "",
+    calories: 0,
+    date: new Date(),
+  });
 
-    this.state = {
-      username: '',
-      description: '',
-      calories: 0,
-      date: new Date(),
-      users: []
-    }
-  }
+  const [Users, setUsers] = useState([])
 
-  componentDidMount() {
-    axios.get('http://localhost:3000/foods/'+this.props.match.params.id)
+  const onSubmit = () => {
+    axios
+      .post("http://localhost:3000/foods/update/"+id, Food)
+  };
+
+  useEffect( () => {
+
+    axios.get('http://localhost:3000/foods/'+id)
       .then(response => {
-        this.setState({
+        setFood({
           username: response.data.username,
           description: response.data.description,
           calories: response.data.calories,
@@ -36,117 +36,88 @@ export default class EditFood extends Component {
         console.log(error);
       })
 
-    axios.get('http://localhost:3000/users/')
-      .then(response => {
-        if (response.data.length > 0) {
-          this.setState({
-            users: response.data.map(user => user.username),
-          })
-        }
-      })
-      .catch((error) => {
-        console.log(error);
+     axios
+      .get("http://localhost:3000/users")
+      .then(res => {
+        console.log(res)
+        res.data.map(user => {
+          setUsers(oldArray => [...oldArray, user.username])
+          return 0;
+        })
       })
 
-  }
+      
+  }, [id]);
 
-  onChangeUsername(e) {
-    this.setState({
-      username: e.target.value
-    })
-  }
 
-  onChangeDescription(e) {
-    this.setState({
-      description: e.target.value
-    })
-  }
-
-  onChangecalories(e) {
-    this.setState({
-      calories: e.target.value
-    })
-  }
-
-  onChangeDate(date) {
-    this.setState({
-      date: date
-    })
-  }
-
-  onSubmit(e) {
-    e.preventDefault();
-
-    const food = {
-      username: this.state.username,
-      description: this.state.description,
-      calories: this.state.calories,
-      date: this.state.date
-    }
-
-    console.log(food);
-
-    axios.post('http://localhost:3000/foods/update/' + this.props.match.params.id, food)
-      .then(res => console.log(res.data));
-
-    window.location = '/';
-  }
-
-  render() {
-    return (
+  return (
     <div>
-      <h3>Edit Food Log</h3>
-      <form onSubmit={this.onSubmit}>
-        <div className="form-group"> 
+      <h3>Edit Exercise Log</h3>
+      <form onSubmit={onSubmit}>
+        <div className="form-group">
           <label>Username: </label>
-          <select ref="userInput"
-              required
-              className="form-control"
-              value={this.state.username}
-              onChange={this.onChangeUsername}>
-              {
-                this.state.users.map(function(user) {
-                  return <option 
-                    key={user}
-                    value={user}>{user}
-                    </option>;
-                })
-              }
+          <select
+            required
+            className="form-control"
+            value={Food.username}
+            onChange={(e) =>
+              setFood({ ...Food, username: e.target.value })
+            }
+          >
+            {Users.map(function (user) {
+              return (
+                <option key={user} value={user}>
+                  {user}
+                </option>
+              );
+            })}
           </select>
         </div>
-        <div className="form-group"> 
+        <div className="form-group">
           <label>Description: </label>
-          <input  type="text"
-              required
-              className="form-control"
-              value={this.state.description}
-              onChange={this.onChangeDescription}
-              />
+          <input
+            type="text"
+            required
+            className="form-control"
+            value={Food.description}
+            onChange={(e) =>
+              setFood({ ...Food, description: e.target.value })
+            }
+          />
         </div>
         <div className="form-group">
-          <label>calories (in minutes): </label>
-          <input 
-              type="text" 
-              className="form-control"
-              value={this.state.calories}
-              onChange={this.onChangecalories}
-              />
+          <label>Calories: </label>
+          <input
+            type="text"
+            className="form-control"
+            value={Food.calories}
+            onChange={(e) =>
+              setFood({ ...Food, calories: e.target.value })
+            }
+          />
         </div>
         <div className="form-group">
           <label>Date: </label>
           <div>
             <DatePicker
-              selected={this.state.date}
-              onChange={this.onChangeDate}
+              selected={Food.date}
+              onChange={(e) =>
+                setFood({ ...Food, date: e.target.value })
+              }
             />
           </div>
         </div>
 
         <div className="form-group">
-          <input type="submit" value="Edit Food Log" className="btn btn-primary" />
+          <input
+            type="submit"
+            value="Create Exercise Log"
+            className="btn btn-primary"
+          />
         </div>
       </form>
     </div>
-    )
-  }
-}
+  );
+};
+
+export default EditFood;
