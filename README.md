@@ -2,7 +2,6 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-not sure how to deploy this app tbh XD
 **MERN stack + CRUD**
 -------------------------
 #Create
@@ -17,3 +16,5 @@ not sure how to deploy this app tbh XD
 #Update/Delete
 -----------------
 ![image](https://user-images.githubusercontent.com/75595719/114599265-dfc5ae80-9c60-11eb-9471-a315c7d51b40.png)
+
+(idk how to deploy full stack apps lmao)
