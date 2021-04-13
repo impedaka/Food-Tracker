@@ -2,9 +2,9 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-not sure how to deploy this app tbh XD.
+not sure how to deploy this app tbh XD
 **MERN stack + CRUD**
-
+-------------------------
 #Create
 --------------------
 ![image](https://user-images.githubusercontent.com/75595719/114599448-18fe1e80-9c61-11eb-9257-449c87a6d34c.png)
